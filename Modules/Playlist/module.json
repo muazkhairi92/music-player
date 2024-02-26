@@ -1,0 +1,11 @@
+{
+    "name": "Playlist",
+    "alias": "playlist",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Playlist\\App\\Providers\\PlaylistServiceProvider"
+    ],
+    "files": []
+}
