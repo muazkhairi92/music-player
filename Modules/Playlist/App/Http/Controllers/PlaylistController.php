@@ -8,7 +8,7 @@ use Modules\Playlist\App\Http\Requests\PostPlaylistRequest;
 use Modules\Playlist\App\Http\Requests\PutPlaylistRequest;
 use Modules\Playlist\App\Models\Playlist;
 use Modules\Playlist\App\Models\PlayListList;
-use Modules\Playlist\App\resources\PlaylistResource;
+use Modules\Playlist\App\Http\Resources\PlaylistResource;
 
 class PlaylistController extends Controller
 {
