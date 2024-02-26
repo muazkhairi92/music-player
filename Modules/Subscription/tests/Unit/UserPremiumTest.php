@@ -27,8 +27,11 @@ class UserPremiumTest extends SubscriptionTestCase
         $user = $this->createUser();
         $subscription = $this->createSubscription($user->id);
 
-        $transaction = Transaction::factory()->create(['subscription_id' => $subscription->id]);
-
+        $transaction = Transaction::create(['subscription_id' => $subscription->id,
+        'transaction_id' => Str::random(10),
+        'eghl_transaction_status' => EghlTransactionStatusType::Pending,
+        'amount' => 100, ]);
+        
         $payload = [
             'HashValue' => 'foobar',
             'HashValue2' => 'foobar',
@@ -79,7 +82,7 @@ class UserPremiumTest extends SubscriptionTestCase
 
         $transaction = Transaction::create(['subscription_id' => $subscription->id,
         'transaction_id' => Str::random(10),
-        'eghl_transaction_status' => 2,
+        'eghl_transaction_status' => EghlTransactionStatusType::Pending,
         'amount' => 100, ]);
 
         $payload = [
