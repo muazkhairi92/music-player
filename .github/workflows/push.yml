@@ -18,7 +18,6 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.1']
-        redis-version: [6]
 
     services:
       mysql:
@@ -35,11 +34,6 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-    
-    - name: Setup Redis Server
-      uses: supercharge/redis-github-action@1.4.0
-      with:
-        redis-version: ${{ matrix.redis-version }}
 
     - name: Git checkout To Target Branch
       uses: actions/checkout@v2
@@ -70,15 +64,8 @@ jobs:
         DB_PORT: 8889
         DB_USERNAME: root
         DB_PASSWORD: root
-        CACHE_DRIVER: redis
-        SESSION_DRIVER: redis
-        REDIS_CLIENT: predis
-        REDIS_HOST: 127.0.0.1
-        REDIS_PASSWORD: null
-        REDIS_PORT: 6379
-        REDIS_DB: 0
-        REDIS_CACHE_DB: 1
-        REDIS_SESSION_DB: 2
+        CACHE_DRIVER: file
+        SESSION_DRIVER: file
         TELESCOPE_ENABLED: false
 
 
