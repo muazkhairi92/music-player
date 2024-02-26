@@ -2,7 +2,6 @@
 
 namespace Modules\Subscription\App\Http\Controllers;
 
-
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -24,21 +23,19 @@ class TransactionController extends Controller
         $this->TransactionService = $TransactionService;
     }
 
-
     /**
-     * Generate eghl payment url
+     * Generate eghl payment url.
      */
     public function generatePaymentUrl(TransactionRequest $request)
     {
         $user = Auth::user();
-
 
         // Create transaction record with status pending
         $transactionId = ($transaction = Transaction::latest()->first()) ?
             $newId = $transaction->id.Carbon::now()->format('Hi') :
             $newId = Carbon::now()->format('Hi');
 
-        //data to pass to generate eghl link
+        // data to pass to generate eghl link
         $data = [
             'PaymentID' => $newId,
             'OrderNumber' => $transactionId,
@@ -52,7 +49,6 @@ class TransactionController extends Controller
 
         $paymentUrl = (new Eghl())->processPaymentRequest($data);
 
-
         // store data with pending status
         Transaction::create([
             'portfolio_id' => $user->portfolio->id,
@@ -60,7 +56,7 @@ class TransactionController extends Controller
             'transaction_id' => $newId,
             'type' => $request->type,
 
-            //reason being transaction table would only track the shares amount, not amount with add-on fees
+            // reason being transaction table would only track the shares amount, not amount with add-on fees
             'amount' => $request->shares,
             'invoice_no' => $newId,
         ]);
@@ -73,8 +69,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * Callback response from eghl server
-     * @param Request $data
+     * Callback response from eghl server.
+     *
      * @return Response|ResponseFactory|void
      */
     public function callback(Request $data)
@@ -94,7 +90,7 @@ class TransactionController extends Controller
      * Refer eGHL-API-Ver 2.9q.pdf section 5.2 Payment/Capture Transaction Status
      * Success = 0
      * Fail = 1
-     * Pending = 2
+     * Pending = 2.
      */
     public function redirect(Request $data)
     {
@@ -107,7 +103,6 @@ class TransactionController extends Controller
 
         $transaction->eghl_transaction_status == 0 ? $status = 'successful' : $status = 'not successful';
 
-        return view('welcome', ['status' => $status]);
+        return response('Transaction'.$status, 200);
     }
-
 }
