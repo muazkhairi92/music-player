@@ -9,6 +9,7 @@
             <directory>tests/Unit</directory>
             <directory>Modules/User/tests/Unit</directory>
             <directory>Modules/Subscription/tests/Unit</directory>
+            <directory>Modules/Playlist/tests/Unit</directory>
 
         </testsuite>
         <testsuite name="Feature">
