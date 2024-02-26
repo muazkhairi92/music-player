@@ -58,13 +58,14 @@ To start new module, create new branch from **staging** branch.
 git checkout staging
 git checkout -b feat/staging-your-new-module
 php artisan module:make your-new-module
-
 ```
+
 For existing module, create new branch from **staging-module** branch. 
+
 ```
 git checkout staging/staging-your-new-module
 git checkout -b feat/module-
-
+```
 
 Commonly used command to generate necessary files:
 
@@ -75,11 +76,11 @@ php artisan module:make-request your-request your-module
 php artisan module:make-resource your-resource your-module
 php artisan module:make-job your-job your-module
 php artisan module:make-test your-test your-module
-
 ```
 
 to enable `php artisan test` to run to also your module, 
 make change on `phpunit.xml` file to include you module:
+
 ```
 <directory>Modules/Your-module/tests/Unit</directory>
 ```
