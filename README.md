@@ -70,7 +70,7 @@ git checkout -b feat/module-
 Commonly used command to generate necessary files:
 
 ```
-php artisan module:make-model -m your-model your-module
+php artisan module:make-model your-model -m your-module
 php artisan module:make-controller your-controller your-module
 php artisan module:make-request your-request your-module
 php artisan module:make-resource your-resource your-module
