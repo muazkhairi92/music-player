@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Playlist\App\Http\Controllers\PlaylistController;
 
 /*
     |--------------------------------------------------------------------------
