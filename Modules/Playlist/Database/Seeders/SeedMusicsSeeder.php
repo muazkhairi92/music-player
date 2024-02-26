@@ -14,7 +14,7 @@ class SeedMusicsSeeder extends Seeder
     {
         Song::truncate();
 
-        $json = \File::get(__DIR__.'modules/playlist/database/data/songs.json');
+        $json = \File::get('modules/playlist/database/seeders/data/songs.json');
         $banks = json_decode($json);
 
         foreach ($banks as $key => $value) {
