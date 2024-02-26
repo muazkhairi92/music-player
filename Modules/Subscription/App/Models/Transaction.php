@@ -2,8 +2,8 @@
 
 namespace Modules\Subscription\App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Subscription\Database\factories\TransactionFactory;
 
 class Transaction extends Model
@@ -11,7 +11,7 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'portfolio_id',
+        'subscription_id',
         'eghl_transaction_status',
         'user_transaction_status',
         'gateway_transaction_id',
@@ -27,7 +27,7 @@ class Transaction extends Model
     {
         return $this->belongsTo(Subscription::class);
     }
-    
+
     protected static function newFactory(): TransactionFactory
     {
         return TransactionFactory::new();
