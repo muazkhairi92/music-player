@@ -3,65 +3,37 @@
 namespace Modules\Subscription\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Modules\Subscription\App\Http\Resources\SubscriptionHomeResource;
+use Modules\Subscription\App\Http\Resources\TransactionIndexResource;
+use Modules\Subscription\App\Models\Transaction;
 
 class SubscriptionController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * user's subscription home.
+     */
+    public function home()
+    {
+        $subscription = Auth::user()->subscription;
+
+        return $this->sendResponse(
+            'Subscription home page.',
+            new SubscriptionHomeResource($subscription->load('user')),
+            200
+        );
+    }
+
+    /**
+     * user's transactions list.
      */
     public function index()
     {
-        return view('subscription::index');
-    }
+        $subscription = Auth::user()->subscription;
+        $transactions = Transaction::where([['subsription_id', $subscription->id], ['type', request('type')]])
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('subscription::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('subscription::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('subscription::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id): RedirectResponse
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id)
-    {
-        //
+        return TransactionIndexResource::collection($transactions);
     }
 }

@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Modules\Subscription\App\Http\Controllers\SubscriptionController;
+use Modules\Subscription\App\Http\Controllers\TransactionController;
 
 /*
     |--------------------------------------------------------------------------
@@ -15,5 +16,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware(['auth:sanctum'])->prefix('v1')->name('api.')->group(function () {
-    Route::get('subscription', fn (Request $request) => $request->user())->name('subscription');
+    Route::post('deposit', [TransactionController::class, 'generatePaymentUrl']);
+    Route::get('home', [SubscriptionController::class, 'home']);
+    Route::get('transactions', [SubscriptionController::class, 'index']);
 });
+
+Route::post('callback', [TransactionController::class, 'callback']);
+Route::get('redirect', [TransactionController::class, 'redirect']);
+Route::post('redirect', [TransactionController::class, 'redirect']);
