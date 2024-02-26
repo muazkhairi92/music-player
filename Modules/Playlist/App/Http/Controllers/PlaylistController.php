@@ -3,9 +3,12 @@
 namespace Modules\Playlist\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Modules\Playlist\App\Http\Requests\PostPlaylistRequest;
+use Modules\Playlist\App\Http\Requests\PutPlaylistRequest;
+use Modules\Playlist\App\Models\Playlist;
+use Modules\Playlist\App\Models\PlayListList;
+use Modules\Playlist\App\Http\Resources\PlaylistResource;
 
 class PlaylistController extends Controller
 {
@@ -14,23 +17,33 @@ class PlaylistController extends Controller
      */
     public function index()
     {
-        return view('playlist::index');
-    }
+        $playlists = Playlist::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('playlist::create');
+        return PlaylistResource::collection($playlists);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(PostPlaylistRequest $request)
     {
-        //
+        $user = Auth::user();
+        if (!$user->subscription->isPremium) {
+            return $this->sendError('User not allowed to make playlist', null, 403);
+        }
+        $playlist = Playlist::create([
+            'user_id' => $user->id,
+            'name' => $request->name,
+        ]);
+        foreach ($request->list as $list) {
+            $list = PlayListList::create([
+                'playlist_id' => $playlist->id,
+                'song_id' => $list['song_id'],
+                'order_number' => $list['order_number'],
+            ]);
+        }
+
+        return $this->sendResponse('playlist successfully create', new PlaylistResource($playlist), 200);
     }
 
     /**
@@ -42,19 +55,21 @@ class PlaylistController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('playlist::edit');
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function update(PutPlaylistRequest $request, $id)
     {
-        //
+        $playlist = Auth::user()->playlist->findOrFail($id);
+        $playlist->PlaylistList()->delete();
+        foreach ($request->list as $list) {
+            $list = PlayListList::create([
+                'playlist_id' => $playlist->id,
+                'song_id' => $list->song_id,
+                'order_number' => $list->order_number,
+            ]);
+        }
+
+        return $this->sendResponse('playlist successfully updated', new PlaylistResource($playlist), 200);
     }
 
     /**
@@ -62,6 +77,8 @@ class PlaylistController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Auth::user()->playlist->findOrFail($id)->delete();
+
+        return $this->sendResponse('playlist successfully deleted', null, 200);
     }
 }
