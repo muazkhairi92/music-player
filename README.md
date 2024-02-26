@@ -86,8 +86,6 @@ make change on `phpunit.xml` file to include you module:
 ```
 
 
-```
-
 ### Pull Request
 
 - Push your new module to github
