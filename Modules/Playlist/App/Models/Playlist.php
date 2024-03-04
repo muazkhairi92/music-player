@@ -14,15 +14,22 @@ class Playlist extends Model
     /**
      * The attributes that are mass assignable.
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'user_id',
+        'name'
+    ];
 
     protected static function newFactory(): PlaylistFactory
     {
-        // return PlaylistFactory::new();
+        return PlaylistFactory::new();
     }
 
     public function User()
     {
         return $this->belongsTo(User::class);
+    }
+    public function PlaylistList()
+    {
+        return $this->hasMany(PlayListList::class);
     }
 }

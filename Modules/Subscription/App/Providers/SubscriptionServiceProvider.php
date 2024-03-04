@@ -2,8 +2,10 @@
 
 namespace Modules\Subscription\App\Providers;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Subscription\App\Console\UpdateUserPlanCommand;
 
 class SubscriptionServiceProvider extends ServiceProvider
 {
@@ -33,11 +35,11 @@ class SubscriptionServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register commands in the format of Command::class
+     * Register commands in the format of Command::class.
      */
     protected function registerCommands(): void
     {
-        // $this->commands([]);
+        $this->commands([UpdateUserPlanCommand::class]);
     }
 
     /**
@@ -45,10 +47,10 @@ class SubscriptionServiceProvider extends ServiceProvider
      */
     protected function registerCommandSchedules(): void
     {
-        // $this->app->booted(function () {
-        //     $schedule = $this->app->make(Schedule::class);
-        //     $schedule->command('inspire')->hourly();
-        // });
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->command('subscription:update-user-plan')->dailyAt('00:05');
+        });
     }
 
     /**
