@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\User\App\Http\Controllers\AuthController;
 use Modules\User\App\Http\Controllers\UserController;
 
 /*
@@ -13,6 +14,8 @@ use Modules\User\App\Http\Controllers\UserController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 Route::group([], function () {
     Route::resource('user', UserController::class)->names('user');
