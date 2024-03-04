@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+use Laravel\Socialite\Facades\Socialite;
 use Modules\User\App\Enums\UserStatus;
 use Modules\User\App\Http\Requests\ForgetPasswordRequest;
 use Modules\User\App\Http\Requests\LoginRequest;
@@ -109,5 +110,32 @@ class AuthController extends Controller
             request('front_url').'/reset-password?email='.urlencode($request->email).'&token='.urlencode($request->token)
             : config('services.ticketing.frontend_url').'/reset-password?email='.urlencode($request->email).'&token='.urlencode($request->token)
         );
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        $googleUser = Socialite::driver('google')->user();
+        // Check if the user exists in your system based on their email or other unique identifier.
+        // If not, create a new user account.
+        // Log in the user using JWT or other authentication method.
+
+        $user = User::updateOrCreate([
+            'google_id' => $googleUser->id,
+        ], [
+            'name' => $googleUser->name,
+            'email' => $googleUser->email,
+            'google_token' => $googleUser->token,
+            'google_refresh_token' => $googleUser->refreshToken,
+        ]);
+
+        $user->refresh();
+        $user['token'] = $user->createToken('API Token')->plainTextToken;
+        
+        return $this->sendResponse('Authentication Success', new AuthResource($user), 200);
     }
 }

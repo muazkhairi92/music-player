@@ -106,7 +106,7 @@ return [
             'channels' => ['path' => 'App/Broadcasting', 'generate' => false],
             'migration' => ['path' => 'Database/migrations', 'generate' => false],
             'seeder' => ['path' => 'Database/Seeders', 'generate' => true],
-            'factory' => ['path' => 'Database/Factories', 'generate' => false],
+            'factory' => ['path' => 'Database/factories', 'generate' => false],
             'model' => ['path' => 'App/Models', 'generate' => false],
             'observer' => ['path' => 'App/Observers', 'generate' => false],
             'routes' => ['path' => 'routes', 'generate' => true],
